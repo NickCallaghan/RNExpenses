@@ -5,6 +5,9 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useExpenses } from "../store/ExpensesContext";
 
+import Button from "../components/Button";
+import IconButton from "../components/IconButton";
+
 interface AllExpensesScreenProps extends ViewProps {
     // Add your custom props here
 }
@@ -18,38 +21,42 @@ export const AllExpensesScreen: React.FC<AllExpensesScreenProps> = ({
     const { state } = useExpenses();
     const { expenses } = state;
 
-    useEffect(() => {
-        if (isEditing) {
-            const expense = expenses.find(
-                (item) => item.id === route.params.itemId
-            );
-        }
-    }, [isEditing, route.params?.itemId, expenses, navigation]);
-
     useLayoutEffect(() => {
         navigation.setOptions({
             title: isEditing ? "Edit Expense" : "Add Expense",
         });
     }, [navigation, isEditing]);
 
+    const handleCancel = () => {
+        navigation.goBack();
+    };
+    const handleAdd = () => {
+        navigation.goBack();
+    };
+    const handleDelete = () => {
+        navigation.goBack();
+    };
+
     return (
         <View style={[styles.container, style]}>
             <View style={styles.detailsContainer}>
-                <Text style={{ color: "white" }}>Expense Details</Text>
+                <Button mode="contained" onPress={handleAdd}>
+                    {isEditing ? "Update" : "Add"}
+                </Button>
+                <Button mode="outlined" onPress={handleCancel}>
+                    Cancel
+                </Button>
             </View>
 
             {isEditing && (
-                <Ionicons
+                <IconButton
+                    onPress={handleDelete}
                     name="trash"
                     size={44}
                     color={COLORS.error500}
                     style={{ marginHorizontal: 12 }}
                 />
             )}
-
-            <Text style={{ color: "white" }}>
-                {isEditing ? "Editing" : "Adding"}
-            </Text>
         </View>
     );
 };
