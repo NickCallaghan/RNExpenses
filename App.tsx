@@ -16,7 +16,7 @@ import ManageExpense from "./screens/ManageExpense";
 
 // Define the types for your navigation parameters
 type RootStackParamList = {
-    Home: undefined;
+    Expenses: undefined;
     ManageExpense: { itemId: string };
 };
 
@@ -48,7 +48,7 @@ const TabNavigator = () => {
                     backgroundColor: COLORS.primary500,
                 },
                 tabBarActiveTintColor: "white",
-                tabBarInactiveTintColor: COLORS.highlight500,
+                tabBarInactiveTintColor: COLORS.accent500,
             }}
         >
             <Tab.Screen
@@ -59,7 +59,7 @@ const TabNavigator = () => {
                         <Ionicons
                             name="timer"
                             size={24}
-                            color={focused ? "white" : COLORS.highlight500}
+                            color={focused ? "white" : COLORS.accent500}
                         />
                     ),
                     title: "Recent Expenses",
@@ -73,7 +73,7 @@ const TabNavigator = () => {
                         <Ionicons
                             name="calendar"
                             size={24}
-                            color={focused ? "white" : COLORS.highlight500}
+                            color={focused ? "white" : COLORS.accent500}
                         />
                     ),
                     title: "All Expenses",
@@ -90,7 +90,7 @@ export default function App() {
             <NavigationContainer>
                 <Stack.Navigator>
                     <Stack.Screen
-                        name="Home"
+                        name="Expenses"
                         component={TabNavigator}
                         options={{
                             headerShown: false,

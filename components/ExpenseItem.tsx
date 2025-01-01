@@ -37,7 +37,7 @@ export const ExpenseItem: React.FC<ExpenseItemProps> = ({ style, item }) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: COLORS.primary500,
+        backgroundColor: COLORS.primary700,
         flexDirection: "row",
         gap: 10,
         justifyContent: "space-between",

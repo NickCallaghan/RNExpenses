@@ -30,7 +30,7 @@ export const AllExpensesScreen: React.FC<AllExpensesScreenProps> = ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.primary700,
+        backgroundColor: COLORS.primary800,
         padding: 16,
     },
 });
