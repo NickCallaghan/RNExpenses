@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, ViewProps } from "react-native";
 import { COLORS } from "../constants/Colors";
-import { useFirebase } from "../hooks/useFirebase";
 
 import ExepenseTotal from "../components/ExepenseTotal";
 import ExpenseList from "../components/ExpenseList";
@@ -18,17 +17,15 @@ export const RecentExpensesScreen: React.FC<RecentExpensesScreenProps> = ({
 }) => {
     const { expenses } = useExpenses();
 
-    const last7DaysExpenses = expenses.expenses.filter((item) => {
+    const last7DaysExpenses = expenses.filter((item) => {
+        // TODO: Fix filter query, filter using firestore query
         const today = new Date();
         const last7Days = new Date(today);
         last7Days.setDate(today.getDate() - 7);
         return item.date >= last7Days;
     });
 
-    const totalExpenses = expenses.expenses.reduce(
-        (acc, item) => acc + item.amount,
-        0
-    );
+    const totalExpenses = expenses.reduce((acc, item) => acc + item.amount, 0);
 
     return (
         <View style={[styles.container, style]}>

@@ -6,27 +6,44 @@ import React, {
     ReactNode,
     useState,
 } from "react";
-import { Expense } from "../types/expense";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { Expense, NewExpense } from "../types/expense";
+import {
+    collection,
+    query,
+    where,
+    onSnapshot,
+    addDoc,
+} from "firebase/firestore";
 
-import { db } from "../hooks/useFirebase";
+import { db } from "./firebase";
 
-type ExpensesState = {
+type ExpensesContext = {
     expenses: Expense[];
+    addExpense: (expense: NewExpense) => void;
+    updateExpense: (expense: Expense) => void;
 };
 
-const initialState: ExpensesState = {
+const initialState: ExpensesContext = {
     expenses: [],
+    addExpense: () => {},
+    updateExpense: () => {},
 };
 
-const ExpensesContext = createContext<{
-    expenses: ExpensesState;
-}>({
-    expenses: initialState,
-});
+const ExpensesContext = createContext<ExpensesContext>(initialState);
 
 export const ExpensesProvider = ({ children }: { children: ReactNode }) => {
-    const [expenses, setExpenses] = useState(initialState);
+    const [expenses, setExpenses] = useState([] as Expense[]);
+
+    const addExpense = async (expense: NewExpense) => {
+        try {
+            const docRef = await addDoc(collection(db, "expenses"), expense);
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    };
+
+    const updateExpense = async (expense: Expense) => {};
 
     useEffect(() => {
         // Firestore query for real time updates
@@ -37,16 +54,17 @@ export const ExpensesProvider = ({ children }: { children: ReactNode }) => {
             querySnapshot.forEach((doc) => {
                 expenses.push({ id: doc.id, ...doc.data() });
             });
-            setExpenses({ expenses });
+            console.log("Expenses: ", expenses);
+            setExpenses(expenses);
         });
         // Stop listening to changes
         return () => unsubscribe();
     }, []);
 
-    const state = { expenses: expenses.expenses };
-
     return (
-        <ExpensesContext.Provider value={{ expenses: state }}>
+        <ExpensesContext.Provider
+            value={{ expenses, addExpense, updateExpense }}
+        >
             {children}
         </ExpensesContext.Provider>
     );

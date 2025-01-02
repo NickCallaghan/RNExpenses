@@ -5,6 +5,7 @@ import { COLORS } from "../constants/Colors";
 import ExpenseList from "../components/ExpenseList";
 import ExepenseTotal from "../components/ExepenseTotal";
 import EmptyMessage from "../components/EmptyMessage";
+import { Expense } from "../types/expense";
 
 import { useExpenses } from "../store/ExpensesContext";
 
@@ -15,8 +16,7 @@ interface AllExpensesScreenProps extends ViewProps {
 export const AllExpensesScreen: React.FC<AllExpensesScreenProps> = ({
     style,
 }) => {
-    const { expenses: state } = useExpenses();
-    const { expenses } = state;
+    const { expenses } = useExpenses();
 
     const totalExpenses = expenses.reduce((acc, item) => acc + item.amount, 0);
 

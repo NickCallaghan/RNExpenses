@@ -6,8 +6,7 @@ import Input from "./Input";
 import { COLORS } from "../constants/Colors";
 
 import { useNavigation } from "@react-navigation/native";
-import { ExpensesActionType, useExpenses } from "../store/ExpensesContext";
-import { useFirebase } from "../hooks/useFirebase";
+import { useExpenses } from "../store/ExpensesContext";
 
 interface ManageExpenseFormProps extends ViewProps {
     isEditing: boolean;
@@ -26,8 +25,8 @@ export const ManageExpenseForm: React.FC<ManageExpenseFormProps> = ({
     itemId,
 }) => {
     const navigation = useNavigation<any>();
-    const { addExpense } = useFirebase();
-    const { state, dispatch } = useExpenses();
+    const { addExpense } = useExpenses();
+
     const [error, setError] = useState({ isError: false, message: "" });
     const { isError } = error;
     const [formState, setFormState] = useState({
@@ -35,7 +34,6 @@ export const ManageExpenseForm: React.FC<ManageExpenseFormProps> = ({
         amount: "",
         date: "",
     });
-    const { expenses } = state;
 
     const handleChange = (input: ExpenseFieldsType, enteredValue: string) => {
         console.log({ enteredValue, input });
@@ -44,21 +42,19 @@ export const ManageExpenseForm: React.FC<ManageExpenseFormProps> = ({
 
     useEffect(() => {
         if (isEditing) {
-            const expense = expenses.find((expense) => expense.id === itemId);
-
-            try {
-                if (!expense) {
-                    throw new Error("Expense not found");
-                }
-
-                setFormState({
-                    title: expense.title,
-                    amount: expense.amount.toString(),
-                    date: expense.date.toISOString().split("T")[0],
-                });
-            } catch (error) {
-                console.error(error);
-            }
+            //TODO: Fecth doc from firestore if id is present
+            //     try {
+            //         if (!expense) {
+            //             throw new Error("Expense not found");
+            //         }
+            //         setFormState({
+            //             title: expense.title,
+            //             amount: expense.amount.toString(),
+            //             date: expense.date.toISOString().split("T")[0],
+            //         });
+            //     } catch (error) {
+            //         console.error(error);
+            //     }
         }
     }, []);
 
@@ -73,10 +69,6 @@ export const ManageExpenseForm: React.FC<ManageExpenseFormProps> = ({
             amount: parseFloat(formState.amount),
             date: new Date(formState.date),
         };
-
-        const action = isEditing
-            ? ExpensesActionType.EDIT_EXPENSE
-            : ExpensesActionType.ADD_EXPENSE;
 
         const isAmountValid = !isNaN(updatedExpenseDetails.amount);
         const isDateValid = !isNaN(updatedExpenseDetails.date.getTime());
@@ -98,7 +90,7 @@ export const ManageExpenseForm: React.FC<ManageExpenseFormProps> = ({
         }
         if (allFieldsValid && !isEditing) {
             // dispatch({ type: action, payload: updatedExpenseDetails });
-            addExpense(updatedExpenseDetails);
+            // addExpense(updatedExpenseDetails);
             navigation.goBack();
         }
     };
