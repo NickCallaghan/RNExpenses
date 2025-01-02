@@ -5,6 +5,7 @@ import { useExpenses } from "../store/ExpensesContext";
 
 import ExepenseTotal from "../components/ExepenseTotal";
 import ExpenseList from "../components/ExpenseList";
+import EmptyMessage from "../components/EmptyMessage";
 
 interface RecentExpensesScreenProps extends ViewProps {
     // Add your custom props here
@@ -32,6 +33,9 @@ export const RecentExpensesScreen: React.FC<RecentExpensesScreenProps> = ({
         <View style={[styles.container, style]}>
             <ExepenseTotal text="Last 7 days" amount={totalExpenses} />
             <ExpenseList items={last7DaysExpenses} />
+            {expenses.length === 0 && (
+                <EmptyMessage text="No expenses to show for the last 7 days" />
+            )}
         </View>
     );
 };

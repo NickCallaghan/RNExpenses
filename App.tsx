@@ -14,6 +14,8 @@ import AllExpensesScreen from "./screens/AllExpensesScreen";
 import RecentExpensesScreen from "./screens/RecentExpensesScreen";
 import ManageExpense from "./screens/ManageExpense";
 
+import { ExpensesProvider } from "./store/ExpensesContext";
+
 // Define the types for your navigation parameters
 type RootStackParamList = {
     Expenses: undefined;
@@ -87,29 +89,31 @@ export default function App() {
     return (
         <>
             <StatusBar style="light" />
-            <NavigationContainer>
-                <Stack.Navigator>
-                    <Stack.Screen
-                        name="Expenses"
-                        component={TabNavigator}
-                        options={{
-                            headerShown: false,
-                        }}
-                    />
-                    <Stack.Screen
-                        name="ManageExpense"
-                        component={ManageExpense}
-                        options={{
-                            title: "Manage Expense",
-                            headerStyle: {
-                                backgroundColor: COLORS.primary500,
-                            },
-                            headerTintColor: "white",
-                            presentation: "modal",
-                        }}
-                    />
-                </Stack.Navigator>
-            </NavigationContainer>
+            <ExpensesProvider>
+                <NavigationContainer>
+                    <Stack.Navigator>
+                        <Stack.Screen
+                            name="Expenses"
+                            component={TabNavigator}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="ManageExpense"
+                            component={ManageExpense}
+                            options={{
+                                title: "Manage Expense",
+                                headerStyle: {
+                                    backgroundColor: COLORS.primary500,
+                                },
+                                headerTintColor: "white",
+                                presentation: "modal",
+                            }}
+                        />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </ExpensesProvider>
         </>
     );
 }

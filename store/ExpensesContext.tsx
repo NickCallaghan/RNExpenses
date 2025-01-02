@@ -7,7 +7,7 @@ type ExpensesState = {
     expenses: Expense[];
 };
 
-enum ExpensesActionType {
+export enum ExpensesActionType {
     ADD_EXPENSE = "ADD_EXPENSE",
     EDIT_EXPENSE = "EDIT_EXPENSE",
     REMOVE_EXPENSE = "REMOVE_EXPENSE",
@@ -45,6 +45,7 @@ const expensesReducer = (
                 ),
             };
         case ExpensesActionType.REMOVE_EXPENSE:
+            console.log({ delete: action.payload });
             return {
                 ...state,
                 expenses: state.expenses.filter(

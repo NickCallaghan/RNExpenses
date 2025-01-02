@@ -1,12 +1,12 @@
 import React, { useEffect, useLayoutEffect } from "react";
 import { View, Text, StyleSheet, ViewProps } from "react-native";
-import { COLORS } from "../constants/Colors";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useExpenses } from "../store/ExpensesContext";
+import { COLORS } from "../constants/Colors";
 
 import Button from "../components/Button";
 import IconButton from "../components/IconButton";
+import { ExpensesActionType } from "../store/ExpensesContext";
 
 interface AllExpensesScreenProps extends ViewProps {
     // Add your custom props here
@@ -18,7 +18,7 @@ export const AllExpensesScreen: React.FC<AllExpensesScreenProps> = ({
     const route = useRoute<any>();
     const navigation = useNavigation<any>();
     const isEditing = route.params?.itemId !== undefined;
-    const { state } = useExpenses();
+    const { state, dispatch } = useExpenses();
     const { expenses } = state;
 
     useLayoutEffect(() => {
@@ -30,10 +30,29 @@ export const AllExpensesScreen: React.FC<AllExpensesScreenProps> = ({
     const handleCancel = () => {
         navigation.goBack();
     };
+
     const handleAdd = () => {
         navigation.goBack();
+
+        const expense = {
+            id: isEditing ? route.params.itemId : Math.random().toString(),
+            title: "New Expense",
+            amount: parseFloat((Math.random() * 1000).toFixed(2)),
+            date: new Date(),
+        };
+
+        const action = isEditing
+            ? ExpensesActionType.EDIT_EXPENSE
+            : ExpensesActionType.ADD_EXPENSE;
+
+        dispatch({ type: action, payload: expense });
     };
+
     const handleDelete = () => {
+        dispatch({
+            type: ExpensesActionType.REMOVE_EXPENSE,
+            payload: route.params.itemId,
+        });
         navigation.goBack();
     };
 

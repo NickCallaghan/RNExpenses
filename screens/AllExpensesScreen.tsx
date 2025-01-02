@@ -4,6 +4,7 @@ import { COLORS } from "../constants/Colors";
 
 import ExpenseList from "../components/ExpenseList";
 import ExepenseTotal from "../components/ExepenseTotal";
+import EmptyMessage from "../components/EmptyMessage";
 
 import { useExpenses } from "../store/ExpensesContext";
 
@@ -23,6 +24,9 @@ export const AllExpensesScreen: React.FC<AllExpensesScreenProps> = ({
         <View style={[styles.container, style]}>
             <ExepenseTotal text="Total Expenses" amount={totalExpenses} />
             <ExpenseList items={expenses} />
+            {expenses.length === 0 && (
+                <EmptyMessage text="No expenses to show" />
+            )}
         </View>
     );
 };
