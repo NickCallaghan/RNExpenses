@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, ViewProps } from "react-native";
 import { COLORS } from "../constants/Colors";
-import { useExpenses } from "../store/ExpensesContext";
+import { useFirebase } from "../hooks/useFirebase";
 
 import ExepenseTotal from "../components/ExepenseTotal";
 import ExpenseList from "../components/ExpenseList";
 import EmptyMessage from "../components/EmptyMessage";
+import { Expense } from "../types/expense";
+import { useExpenses } from "../store/ExpensesContext";
 
 interface RecentExpensesScreenProps extends ViewProps {
     // Add your custom props here
@@ -14,17 +16,16 @@ interface RecentExpensesScreenProps extends ViewProps {
 export const RecentExpensesScreen: React.FC<RecentExpensesScreenProps> = ({
     style,
 }) => {
-    const { state } = useExpenses();
-    const { expenses } = state;
+    const { expenses } = useExpenses();
 
-    const last7DaysExpenses = expenses.filter((item) => {
+    const last7DaysExpenses = expenses.expenses.filter((item) => {
         const today = new Date();
         const last7Days = new Date(today);
         last7Days.setDate(today.getDate() - 7);
         return item.date >= last7Days;
     });
 
-    const totalExpenses = last7DaysExpenses.reduce(
+    const totalExpenses = expenses.expenses.reduce(
         (acc, item) => acc + item.amount,
         0
     );
@@ -33,7 +34,7 @@ export const RecentExpensesScreen: React.FC<RecentExpensesScreenProps> = ({
         <View style={[styles.container, style]}>
             <ExepenseTotal text="Last 7 days" amount={totalExpenses} />
             <ExpenseList items={last7DaysExpenses} />
-            {expenses.length === 0 && (
+            {last7DaysExpenses.length === 0 && (
                 <EmptyMessage text="No expenses to show for the last 7 days" />
             )}
         </View>

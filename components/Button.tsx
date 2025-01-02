@@ -14,11 +14,11 @@ export const Button: React.FC<ButtonProps> = ({
     mode,
 }) => {
     return (
-        <View style={[style]}>
+        <View style={[style, styles.container]}>
             <Pressable
                 onPress={onPress}
                 style={({ pressed }) => [
-                    styles.container,
+                    styles.button,
                     mode === "outlined" && styles.outlineButton,
                     pressed && styles.pressed,
                 ]}
@@ -31,20 +31,24 @@ export const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: COLORS.primary500,
-        paddingHorizontal: 6,
-        marginVertical: 6,
-        paddingVertical: 10,
+        paddingHorizontal: 5,
         borderRadius: 3,
     },
+    button: {
+        backgroundColor: COLORS.primary500,
+        padding: 10,
+        borderRadius: 5,
+        width: "100%",
+    },
     buttonText: {
+        fontSize: 16,
         color: "white",
         textAlign: "center",
     },
     outlineButton: {
         backgroundColor: "transparent",
-        borderColor: COLORS.primary500,
-        borderWidth: 2,
+        borderColor: COLORS.primary50,
+        borderWidth: 1,
     },
     pressed: {
         opacity: 0.5,

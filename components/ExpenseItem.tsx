@@ -24,7 +24,7 @@ export const ExpenseItem: React.FC<ExpenseItemProps> = ({ style, item }) => {
                 <View>
                     <Text style={styles.expenseTitle}>{title}</Text>
                     <Text style={styles.expenseDate}>
-                        {date.toLocaleDateString("en-GB")}
+                        {/* {date.toISOString().split("T")[0]} */}
                     </Text>
                 </View>
                 <View style={styles.amountContainer}>

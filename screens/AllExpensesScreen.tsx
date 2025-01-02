@@ -15,7 +15,7 @@ interface AllExpensesScreenProps extends ViewProps {
 export const AllExpensesScreen: React.FC<AllExpensesScreenProps> = ({
     style,
 }) => {
-    const { state } = useExpenses();
+    const { expenses: state } = useExpenses();
     const { expenses } = state;
 
     const totalExpenses = expenses.reduce((acc, item) => acc + item.amount, 0);

@@ -13,6 +13,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import AllExpensesScreen from "./screens/AllExpensesScreen";
 import RecentExpensesScreen from "./screens/RecentExpensesScreen";
 import ManageExpense from "./screens/ManageExpense";
+import TestScreen from "./screens/TestScreen";
 
 import { ExpensesProvider } from "./store/ExpensesContext";
 
@@ -20,6 +21,7 @@ import { ExpensesProvider } from "./store/ExpensesContext";
 type RootStackParamList = {
     Expenses: undefined;
     ManageExpense: { itemId: string };
+    Test: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -81,6 +83,7 @@ const TabNavigator = () => {
                     title: "All Expenses",
                 }}
             />
+            <Tab.Screen name="TestScreen" component={TestScreen} />
         </Tab.Navigator>
     );
 };

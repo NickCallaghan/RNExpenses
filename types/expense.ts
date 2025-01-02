@@ -4,3 +4,9 @@ export type Expense = {
     amount: number;
     date: Date;
 };
+
+export type NewExpense = {
+    title: string;
+    amount: number;
+    date: Date;
+};

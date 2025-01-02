@@ -1,67 +1,52 @@
-import React, { createContext, useReducer, useContext, ReactNode } from "react";
+import React, {
+    useEffect,
+    createContext,
+    useReducer,
+    useContext,
+    ReactNode,
+    useState,
+} from "react";
 import { Expense } from "../types/expense";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 
-import { dummyExpenses } from "../data/data";
+import { db } from "../hooks/useFirebase";
 
 type ExpensesState = {
     expenses: Expense[];
 };
 
-export enum ExpensesActionType {
-    ADD_EXPENSE = "ADD_EXPENSE",
-    EDIT_EXPENSE = "EDIT_EXPENSE",
-    REMOVE_EXPENSE = "REMOVE_EXPENSE",
-}
-
-type ExpensesAction =
-    | { type: ExpensesActionType.ADD_EXPENSE; payload: Expense }
-    | { type: ExpensesActionType.EDIT_EXPENSE; payload: Expense }
-    | { type: ExpensesActionType.REMOVE_EXPENSE; payload: string };
-
 const initialState: ExpensesState = {
-    expenses: dummyExpenses,
+    expenses: [],
 };
 
 const ExpensesContext = createContext<{
-    state: ExpensesState;
-    dispatch: React.Dispatch<ExpensesAction>;
+    expenses: ExpensesState;
 }>({
-    state: initialState,
-    dispatch: () => null,
+    expenses: initialState,
 });
 
-const expensesReducer = (
-    state: ExpensesState,
-    action: ExpensesAction
-): ExpensesState => {
-    switch (action.type) {
-        case ExpensesActionType.ADD_EXPENSE:
-            return { ...state, expenses: [...state.expenses, action.payload] };
-        case ExpensesActionType.EDIT_EXPENSE:
-            return {
-                ...state,
-                expenses: state.expenses.map((expense) =>
-                    expense.id === action.payload.id ? action.payload : expense
-                ),
-            };
-        case ExpensesActionType.REMOVE_EXPENSE:
-            console.log({ delete: action.payload });
-            return {
-                ...state,
-                expenses: state.expenses.filter(
-                    (expense) => expense.id !== action.payload
-                ),
-            };
-        default:
-            return state;
-    }
-};
-
 export const ExpensesProvider = ({ children }: { children: ReactNode }) => {
-    const [state, dispatch] = useReducer(expensesReducer, initialState);
+    const [expenses, setExpenses] = useState(initialState);
+
+    useEffect(() => {
+        // Firestore query for real time updates
+        const q = query(collection(db, "expenses"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            //TODO: Fix any type
+            const expenses: any = [];
+            querySnapshot.forEach((doc) => {
+                expenses.push({ id: doc.id, ...doc.data() });
+            });
+            setExpenses({ expenses });
+        });
+        // Stop listening to changes
+        return () => unsubscribe();
+    }, []);
+
+    const state = { expenses: expenses.expenses };
 
     return (
-        <ExpensesContext.Provider value={{ state, dispatch }}>
+        <ExpensesContext.Provider value={{ expenses: state }}>
             {children}
         </ExpensesContext.Provider>
     );
