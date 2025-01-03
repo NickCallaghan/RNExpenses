@@ -25,7 +25,7 @@ export const ManageExpenseForm: React.FC<ManageExpenseFormProps> = ({
     itemId,
 }) => {
     const navigation = useNavigation<any>();
-    const { addExpense } = useExpenses();
+    const { addExpense, getExpense } = useExpenses();
 
     const [error, setError] = useState({ isError: false, message: "" });
     const { isError } = error;
@@ -41,20 +41,14 @@ export const ManageExpenseForm: React.FC<ManageExpenseFormProps> = ({
     };
 
     useEffect(() => {
-        if (isEditing) {
-            //TODO: Fecth doc from firestore if id is present
-            //     try {
-            //         if (!expense) {
-            //             throw new Error("Expense not found");
-            //         }
-            //         setFormState({
-            //             title: expense.title,
-            //             amount: expense.amount.toString(),
-            //             date: expense.date.toISOString().split("T")[0],
-            //         });
-            //     } catch (error) {
-            //         console.error(error);
-            //     }
+        if (itemId) {
+            getExpense(itemId).then((expense: any) => {
+                setFormState({
+                    title: expense.title,
+                    amount: expense.amount.toString(),
+                    date: "",
+                });
+            });
         }
     }, []);
 
