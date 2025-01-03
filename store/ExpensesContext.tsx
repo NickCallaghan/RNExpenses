@@ -1,19 +1,12 @@
+import { addDoc, collection, onSnapshot, query } from "firebase/firestore";
 import React, {
-    useEffect,
     createContext,
-    useReducer,
-    useContext,
     ReactNode,
+    useContext,
+    useEffect,
     useState,
 } from "react";
 import { Expense, NewExpense } from "../types/expense";
-import {
-    collection,
-    query,
-    where,
-    onSnapshot,
-    addDoc,
-} from "firebase/firestore";
 
 import { db } from "./firebase";
 
@@ -49,12 +42,16 @@ export const ExpensesProvider = ({ children }: { children: ReactNode }) => {
         // Firestore query for real time updates
         const q = query(collection(db, "expenses"));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            //TODO: Fix any type
-            const expenses: any = [];
+            const expenses: Expense[] = [];
             querySnapshot.forEach((doc) => {
-                expenses.push({ id: doc.id, ...doc.data() });
+                const data = doc.data();
+                expenses.push({
+                    id: doc.id,
+                    title: data.title,
+                    amount: data.amount,
+                    date: data.date,
+                });
             });
-            console.log("Expenses: ", expenses);
             setExpenses(expenses);
         });
         // Stop listening to changes

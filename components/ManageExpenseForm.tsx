@@ -62,9 +62,8 @@ export const ManageExpenseForm: React.FC<ManageExpenseFormProps> = ({
         navigation.goBack();
     };
 
-    const handleUpsert = () => {
+    const handleAddUpdate = () => {
         const updatedExpenseDetails = {
-            id: itemId ? itemId : Math.random().toString(),
             title: formState.title,
             amount: parseFloat(formState.amount),
             date: new Date(formState.date),
@@ -89,9 +88,11 @@ export const ManageExpenseForm: React.FC<ManageExpenseFormProps> = ({
             return;
         }
         if (allFieldsValid && !isEditing) {
-            // dispatch({ type: action, payload: updatedExpenseDetails });
-            // addExpense(updatedExpenseDetails);
+            addExpense(updatedExpenseDetails);
             navigation.goBack();
+        }
+        if (allFieldsValid && isEditing) {
+            // TODO: Implement update functionality
         }
     };
 
@@ -136,7 +137,7 @@ export const ManageExpenseForm: React.FC<ManageExpenseFormProps> = ({
                 <Button mode="outlined" onPress={handleCancel}>
                     Cancel
                 </Button>
-                <Button mode="contained" onPress={handleUpsert}>
+                <Button mode="contained" onPress={handleAddUpdate}>
                     {isEditing ? "Update" : "Add"}
                 </Button>
             </View>
